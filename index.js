@@ -34,6 +34,11 @@ const port = process.env.PORT || 3000;
 const publicRun = process.argv[2];
 
 app.get('*', (req, res) => {
+    if (path.normalize(decodeURI(req.url)) !== decodeURI(req.url)) {
+        res.statusCode = 403;
+        res.end();
+        return;
+    }
     const file = path.join(__dirname, 'public', req.url);
     fs.stat(file, function (err, stat) {
         if (!err && stat.isFile()) { //是文件
